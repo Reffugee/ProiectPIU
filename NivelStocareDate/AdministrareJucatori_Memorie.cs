@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace NivelStocareDate
 {
-    public class AdministrareJucatori
+    class AdministrareJucatori_Memorie
     {
         private const int nr_max_jucatori = 50;
 
         private Jucator[] jucatori;
         private int nrJucatori;
 
-        public AdministrareJucatori()
+        public AdministrareJucatori_Memorie()
         {
             jucatori = new Jucator[nr_max_jucatori];
             nrJucatori = 0;
         }
 
-        public void AdaugaJucator(Jucator jucator)
+        public void AddJucator(Jucator jucator)
         {
             jucatori[nrJucatori] = jucator;
             nrJucatori++;
@@ -31,20 +31,5 @@ namespace NivelStocareDate
             nrJucatori = this.nrJucatori;
             return jucatori;
         }
-
-        public Jucator GetJucator(string Nume, string Prenume)
-        { 
-            foreach (var jucator in jucatori)
-            {
-                if (jucator.Nume.Equals(Nume, StringComparison.OrdinalIgnoreCase) &&
-                    jucator.Prenume.Equals(Prenume, StringComparison.OrdinalIgnoreCase))
-                {
-                    return jucator;
-                }
-            }
-            return null;
-        }
-        
-        
     }
 }

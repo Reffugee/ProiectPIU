@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdministrareJucatori.cs" />
-    <Compile Include="AdministrareAntrenament.cs" />
+    <Compile Include="AdministrareAntrenamet_FisierText.cs" />
+    <Compile Include="AdministrareJucatori_FisierText.cs" />
+    <Compile Include="AdministrareAntrenament_Memorie.cs" />
+    <Compile Include="AdministrareJucatori_Memorie.cs" />
+    <Compile Include="AdministrarePrezenta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

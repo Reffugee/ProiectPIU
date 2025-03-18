@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
+using System.Configuration;
 
 namespace ProiectPIU
 {
@@ -13,44 +14,62 @@ namespace ProiectPIU
     {
         static void Main()
         {
-            AdministrareJucatori adminJucatori = new AdministrareJucatori();
+            string numeFisier = ConfigurationManager.AppSettings["NumeFisier"];
+            AdministrareJucatori_FisierText adminJucatori = new AdministrareJucatori_FisierText(numeFisier);
+            string numeFisier2 = ConfigurationManager.AppSettings["NumeFisier2"];
             Jucator JucatorNou = new Jucator();
-            AdministrareAntrenament adminAntrenament = new AdministrareAntrenament();
+            AdministrareAntrenament_FisierText adminAntrenament = new AdministrareAntrenament_FisierText(numeFisier2);
             Antrenament AntrenamentNou = new Antrenament();
 
-            for(int k = 0; k < 2; k++)
-            {
-                JucatorNou = CitireJucatorTastatura();
-                AfisareJucator(JucatorNou);
-                adminJucatori.AdaugaJucator(JucatorNou);
-            }
+            JucatorNou = CitireJucatorTastatura();
+            AfisareJucator(JucatorNou);
+            adminJucatori.AdaugaJucator(JucatorNou);
             Jucator[] jucatori = adminJucatori.GetJucatori(out int nrJucatori);
             AfisareJucatori(jucatori, nrJucatori);
-
-            for (int k = 0; k < 2; k++)
-            {
-                AntrenamentNou = CitireTastaturaAntrenament();
-                AfisareAntrenament(AntrenamentNou);
-                adminAntrenament.AdaugaAntrenament(AntrenamentNou);
-            }
+            
+            AntrenamentNou = CitireTastaturaAntrenament();
+            AfisareAntrenament(AntrenamentNou);
+            adminAntrenament.AddAntrenament(AntrenamentNou);
             Antrenament[] antrenamente = adminAntrenament.GetAntrenamente(out int nrAntrenamente);
             AfisareAntrenamente(antrenamente, nrAntrenamente);
+
+            AdministrarePrezenta adminPrezenta = new AdministrarePrezenta();
+
+            Console.WriteLine("\nMarcheaza jucatorul prezent la antrenament:");
+            foreach (var jucator in jucatori)
+            {
+                if (jucator != null)
+                {
+                    Console.WriteLine($"A fost jucatorul {jucator.Nume} {jucator.Prenume} ( Jucatorul #{jucator.Numar}) la {AntrenamentNou.Exercitiu}? (da/nu):");
+                    string input = Console.ReadLine().ToLower();
+                    bool prezent = input == "da" || input == "da";
+
+                    adminPrezenta.Prezenta(jucator.Nume, jucator.Numar, AntrenamentNou.Exercitiu, prezent);
+                }
+            }
+
+            adminPrezenta.AfisarePrezenta();
+
 
             Console.WriteLine("Introdu numele jucatorului de cautat: ");
             string NumeCauta = Console.ReadLine();
             Console.WriteLine("Introdu prenumele jucatorului de cautat: ");
             string PrenumeCauta = Console.ReadLine();
 
-            Jucator GasireJucator = adminJucatori.GetJucator(NumeCauta, PrenumeCauta);
+            List<Jucator> gasiti = adminJucatori.GetJucator(NumeCauta, PrenumeCauta);
 
-            if(GasireJucator != null)
+            if (gasiti.Count > 0)
             {
-                Console.WriteLine($"Jucator gasit: {GasireJucator.Nume} {GasireJucator.Prenume}, Pozitie: {GasireJucator.Pozitie}");
+                foreach (var jucator in gasiti)
+                {
+                    Console.WriteLine(jucator.Info());
+                }
             }
             else
             {
                 Console.WriteLine("Jucatorul nu a fost gasit");
             }
+            
         }
 
         public static Jucator CitireJucatorTastatura()

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NivelStocareDate
 {
-    public class AdministrareAntrenament
+    public class AdministrareAntrenament_Memorie
     {
         private const int nrMaxAntrenamente = 50;
 
@@ -15,7 +15,7 @@ namespace NivelStocareDate
 
         private int nrAntrenamente;
 
-        public AdministrareAntrenament()
+        public AdministrareAntrenament_Memorie()
         {
             antrenamente = new Antrenament[nrMaxAntrenamente];
             nrAntrenamente = 0;
