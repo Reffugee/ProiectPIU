@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LibrarieModele.Enumerari;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -19,7 +20,7 @@ namespace LibrarieModele
         private const int GREUTATE = 6;
         public string Nume { get; set; }
         public string Prenume { get; set; }
-        public string Pozitie { get; set; }
+        public Pozitie Pozitie { get; set; }
         public DateTime DataNastere { get; set; }
         public int Numar { get; set; }
         public int Inaltime { get; set; }
@@ -42,12 +43,13 @@ namespace LibrarieModele
 
         public Jucator()
         {
-            Nume = Prenume = Pozitie = string.Empty;
+            Nume = Prenume = string.Empty;
+            Pozitie = Pozitie.Necunoscut;
             Numar = Inaltime = Greutate = -1;
             DataNastere = DateTime.MinValue;
         }
 
-        public Jucator(string _Nume, string _Prenume, string _Pozitie, DateTime _DataNastere, int _Numar, int _Inaltime, int _Greutate)
+        public Jucator(string _Nume, string _Prenume, Pozitie _Pozitie, DateTime _DataNastere, int _Numar, int _Inaltime, int _Greutate)
         {
             Nume = _Nume;
             Prenume = _Prenume;
@@ -62,7 +64,7 @@ namespace LibrarieModele
             var dateFisier = linieFisier.Split(Separator_fisier);
             this.Nume = dateFisier[NUME];
             this.Prenume = dateFisier[PRENUME];
-            this.Pozitie = dateFisier[POZITIE];
+            this.Pozitie = (Pozitie)Enum.Parse(typeof(Pozitie), dateFisier[POZITIE]);
             this.Numar = Convert.ToInt32(dateFisier[NUMAR]);
             this.DataNastere = DateTime.Parse(dateFisier[DATANASTERE]);
             this.Inaltime = Convert.ToInt32(dateFisier[INALTIME]);
@@ -79,7 +81,7 @@ namespace LibrarieModele
                 Separator_fisier,
                 (Nume ?? " Necunoscut "),
                 (Prenume ?? " Necunoscut "),
-                (Pozitie ?? " Necunoscut "),
+                Pozitie.ToString(),
                 DataNastere.ToString("yyyy-MM-dd"),
                 Numar.ToString(),
                 Inaltime.ToString(),

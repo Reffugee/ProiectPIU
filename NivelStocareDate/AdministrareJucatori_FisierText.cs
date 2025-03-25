@@ -10,7 +10,6 @@ namespace NivelStocareDate
 {
     public class AdministrareJucatori_FisierText
     {
-        private string FilePath = "Jucator.txt";
         private const int nr_max_jucatori = 50;
         private string numeFisier;
 
@@ -47,7 +46,7 @@ namespace NivelStocareDate
         public List<Jucator> GetJucator(string Nume, string Prenume)
         {
             List<Jucator> listaJucatori = new List<Jucator>();
-            foreach (var linie in File.ReadLines(FilePath))
+            foreach (var linie in File.ReadLines(numeFisier))
             {
                 Jucator jucator = new Jucator(linie);
                 if (jucator.Nume.Equals(Nume, StringComparison.OrdinalIgnoreCase) &&

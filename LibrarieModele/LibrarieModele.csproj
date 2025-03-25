@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Antrenament.cs" />
+    <Compile Include="Enum\Pozitie.cs" />
+    <Compile Include="Enum\Zile.cs" />
     <Compile Include="Jucator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

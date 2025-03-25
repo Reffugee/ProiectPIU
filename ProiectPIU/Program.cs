@@ -1,5 +1,6 @@
 ﻿using System;
 using LibrarieModele;
+using LibrarieModele.Enumerari;
 using NivelStocareDate;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using System.Configuration;
+using System.IO;
 
 namespace ProiectPIU
 {
@@ -15,10 +17,14 @@ namespace ProiectPIU
         static void Main()
         {
             string numeFisier = ConfigurationManager.AppSettings["NumeFisier"];
-            AdministrareJucatori_FisierText adminJucatori = new AdministrareJucatori_FisierText(numeFisier);
+            string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleCompletaFisier = locatieFisierSolutie + "\\" + numeFisier;
+            AdministrareJucatori_FisierText adminJucatori = new AdministrareJucatori_FisierText(caleCompletaFisier);
             string numeFisier2 = ConfigurationManager.AppSettings["NumeFisier2"];
+            string locatieFisierSolutie2 = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleCompletaFisier2 = locatieFisierSolutie2 + "\\" + numeFisier2;
             Jucator JucatorNou = new Jucator();
-            AdministrareAntrenament_FisierText adminAntrenament = new AdministrareAntrenament_FisierText(numeFisier2);
+            AdministrareAntrenament_FisierText adminAntrenament = new AdministrareAntrenament_FisierText(caleCompletaFisier2);
             Antrenament AntrenamentNou = new Antrenament();
 
             JucatorNou = CitireJucatorTastatura();
@@ -26,7 +32,7 @@ namespace ProiectPIU
             adminJucatori.AdaugaJucator(JucatorNou);
             Jucator[] jucatori = adminJucatori.GetJucatori(out int nrJucatori);
             AfisareJucatori(jucatori, nrJucatori);
-            
+
             AntrenamentNou = CitireTastaturaAntrenament();
             AfisareAntrenament(AntrenamentNou);
             adminAntrenament.AddAntrenament(AntrenamentNou);
@@ -69,7 +75,7 @@ namespace ProiectPIU
             {
                 Console.WriteLine("Jucatorul nu a fost gasit");
             }
-            
+
         }
 
         public static Jucator CitireJucatorTastatura()
@@ -78,8 +84,20 @@ namespace ProiectPIU
             string nume = Console.ReadLine();
             Console.WriteLine("Introduceti Prenumele Jucatorului:");
             string prenume = Console.ReadLine();
-            Console.WriteLine("Introduceti pozitia jucatorului:");
-            string pozitie = Console.ReadLine();
+            Console.WriteLine("Introduceti pozitiile jucatorului (separate prin virgula, ex: Fundas, Mijlocas):");
+            string inputPozitie = Console.ReadLine();
+            Pozitie pozitie = Pozitie.Necunoscut;
+
+            if (!string.IsNullOrWhiteSpace(inputPozitie))
+            {
+                foreach (var p in inputPozitie.Split(','))
+                {
+                    if (Enum.TryParse(p.Trim(), true, out Pozitie pozitieTemp))
+                    {
+                        pozitie |= pozitieTemp;
+                    }
+                }
+            }
             Console.WriteLine("Introduceti data nasterii jucatorului (format: DD-MM-YYYY):");
             DateTime dataNastere = Convert.ToDateTime(Console.ReadLine());
             Console.WriteLine("Introduceti numarul jucatorului:");
@@ -92,14 +110,14 @@ namespace ProiectPIU
             Jucator jucator = new Jucator(nume, prenume, pozitie, dataNastere, numar, inaltime, greutate);
 
             return jucator;
-            
+
         }
         public static void AfisareJucator(Jucator jucator)
         {
             string infoJucator = string.Format("Numele jucatorului: {0} {1}, Pozitie: {2}, Numar: {3}, Varsta: {4} ani, Inaltime: {5} cm, Greutate: {6} kg",
                 jucator.Nume ?? " NECUNOSCUT ",
                 jucator.Prenume ?? " NECUNOSCUT ",
-                jucator.Pozitie ?? " NECUNOSCUT ",
+                jucator.Pozitie != Pozitie.Necunoscut ? jucator.Pozitie.ToString() : "NECUNOSCUT",
                 jucator.Numar,
                 jucator.Varsta,
                 jucator.Inaltime,
@@ -109,10 +127,10 @@ namespace ProiectPIU
         public static void AfisareJucatori(Jucator[] jucatori, int nrJucatori)
         {
             Console.WriteLine("Jucatorii sunt:");
-            for (int contor = 0;contor < nrJucatori; contor++)
+            for (int contor = 0; contor < nrJucatori; contor++)
             {
                 string infoJucator = jucatori[contor].Info();
-                Console.WriteLine($"Jucatorul {contor+1}, {infoJucator}");
+                Console.WriteLine($"Jucatorul {contor + 1}, {infoJucator}");
             }
         }
         public static Antrenament CitireTastaturaAntrenament()
@@ -123,16 +141,33 @@ namespace ProiectPIU
             string tip = Console.ReadLine();
             Console.WriteLine("Introdu durata exercitiului:");
             int durata = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Alege ziua din saptamana: ");
+            Console.WriteLine("1 - Luni \n" +
+            "2 - Marti \n" +
+            "3 - Miercuri \n" +
+            "4 - Joi \n" +
+            "5 - Vineri \n" +
+            "6 - Sambata \n" +
+            "7 - Duminica \n");
+            int ziInput = Convert.ToInt32(Console.ReadLine());
 
-            Antrenament antrenament = new Antrenament(nume, tip, durata);
+            if (!Enum.IsDefined(typeof(Zile), ziInput))
+            {
+                Console.WriteLine("Ziua introdusa nu este valida.");
+            }
+
+            Zile zi = (Zile)ziInput;
+
+            Antrenament antrenament = new Antrenament(nume, tip, durata, zi);
             return antrenament;
         }
         public static void AfisareAntrenament(Antrenament antrenament)
         {
-            string infoAntrenament = string.Format("Numele exercitiului {0}, Tipul exercitiului {1}, Durata exercitiului {2} minute.",
+            string infoAntrenament = string.Format("Numele exercitiului {0}, Tipul exercitiului {1}, Durata exercitiului {2} minute, Ziua: {3}",
                 antrenament.Exercitiu ?? " NECUNOSCUT ",
                 antrenament.TipExercitiu ?? "NECUNOSCUT ",
-                antrenament.Durata);
+                antrenament.Durata,
+                antrenament.Zi);
             Console.WriteLine(infoAntrenament);
         }
         public static void AfisareAntrenamente(Antrenament[] antrenamente, int nrAntrenamente)

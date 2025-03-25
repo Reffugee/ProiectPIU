@@ -21,7 +21,7 @@ namespace NivelStocareDate
         }
         public void AddAntrenament(Antrenament antrenament)
         {
-            using (StreamWriter streamWriterFisierText = new StreamWriter(numeFisier2,true))
+            using (StreamWriter streamWriterFisierText = new StreamWriter(numeFisier2, true))
             {
                 streamWriterFisierText.WriteLine(antrenament.ConversieSirFisier());
             }
