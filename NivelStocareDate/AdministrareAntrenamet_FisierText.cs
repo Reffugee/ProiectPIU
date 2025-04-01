@@ -28,17 +28,18 @@ namespace NivelStocareDate
         }
         public Antrenament[] GetAntrenamente(out int nrAntrenamente)
         {
-            Antrenament[] antrenamente = new Antrenament[nr_max_antrenamente];
+            List<Antrenament> antrenamente = new List<Antrenament>();
+            nrAntrenamente = 0;
             using (StreamReader streamReader = new StreamReader(numeFisier2))
             {
                 string linieFisier;
-                nrAntrenamente = 0;
                 while ((linieFisier = streamReader.ReadLine()) != null)
                 {
-                    antrenamente[nrAntrenamente++] = new Antrenament(linieFisier);
+                    antrenamente.Add(new Antrenament(linieFisier));
                 }
             }
-            return antrenamente;
+            nrAntrenamente = antrenamente.Count;
+            return antrenamente.ToArray();
         }
     }
 }

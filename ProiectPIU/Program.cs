@@ -32,7 +32,6 @@ namespace ProiectPIU
             adminJucatori.AdaugaJucator(JucatorNou);
             Jucator[] jucatori = adminJucatori.GetJucatori(out int nrJucatori);
             AfisareJucatori(jucatori, nrJucatori);
-
             AntrenamentNou = CitireTastaturaAntrenament();
             AfisareAntrenament(AntrenamentNou);
             adminAntrenament.AddAntrenament(AntrenamentNou);

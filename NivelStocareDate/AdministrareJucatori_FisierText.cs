@@ -30,18 +30,17 @@ namespace NivelStocareDate
 
         public Jucator[] GetJucatori(out int nrJucatori)
         {
-            Jucator[] jucatori = new Jucator[nr_max_jucatori];
+            List<Jucator> jucatori = new List<Jucator>();
             using (StreamReader streamReader = new StreamReader(numeFisier))
             {
                 string linieFisier;
-                nrJucatori = 0;
                 while ((linieFisier = streamReader.ReadLine()) != null)
                 {
-                    jucatori[nrJucatori++] = new Jucator(linieFisier);
+                    jucatori.Add(new Jucator(linieFisier));
                 }
-
             }
-            return jucatori;
+            nrJucatori = jucatori.Count;
+            return jucatori.ToArray();
         }
         public List<Jucator> GetJucator(string Nume, string Prenume)
         {
