@@ -26,10 +26,11 @@ namespace NivelStocareDate
                 streamWriterFisierText.WriteLine(antrenament.ConversieSirFisier());
             }
         }
-        public Antrenament[] GetAntrenamente(out int nrAntrenamente)
+        public List<Antrenament> GetAntrenamente(out int nrAntrenamente)
         {
             List<Antrenament> antrenamente = new List<Antrenament>();
             nrAntrenamente = 0;
+
             using (StreamReader streamReader = new StreamReader(numeFisier2))
             {
                 string linieFisier;
@@ -38,8 +39,10 @@ namespace NivelStocareDate
                     antrenamente.Add(new Antrenament(linieFisier));
                 }
             }
+
             nrAntrenamente = antrenamente.Count;
-            return antrenamente.ToArray();
+            return antrenamente;
         }
+
     }
 }

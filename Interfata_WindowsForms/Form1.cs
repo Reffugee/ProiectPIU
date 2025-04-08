@@ -1,4 +1,5 @@
 ﻿using LibrarieModele;
+using LibrarieModele.Enumerari;
 using NivelStocareDate;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,10 @@ namespace Interfata_WindowsForms
     public partial class Form1 : Form
     {
         AdministrareJucatori_FisierText adminJucatori;
-        AdministrareAntrenament_FisierText adminAntrenamente; // New: Manage training data
+        AdministrareAntrenament_FisierText adminAntrenamente;
 
-        private DataGridView dgvAntrenamente; // New: Table for training exercises
+        private DataGridView dgvAntrenamente;
+        private DateTimePicker dtpDataNasterii;
 
         private Label lblNume;
         private Label lblPrenume;
@@ -34,26 +36,34 @@ namespace Interfata_WindowsForms
         private Label lblDurata;
         private Label lblZi;
 
-        private Label[] lblsNume;
-        private Label[] lblsPrenume;
-        private Label[] lblsPozitie;
-        private Label[] lblsNumar;
-        private Label[] lblsVarsta;
-        private Label[] lblsInaltime;
-        private Label[] lblsGreutate;
+        private Button btnRefresh;
 
-        private Label[] lblsExercitiu;
-        private Label[] lblsTip;
-        private Label[] lblsDurata;
-        private Label[] lblsZi;
+        private TextBox txtNume, txtPrenume, txtPozitie, txtNumar, txtVarsta, txtInaltime, txtGreutate;
+        private TextBox txtExercitiu, txtTip, txtDurata;
+        private ComboBox cmbZi;
+        private Button btnAdaugaJucator, btnAdaugaExercitiu;
 
-        private const int LATIME_CONTROL = 100;
+
+        private Label[,] lblJucatori;
+
+        private Label[,] lblExercitii;
+
+        private const int LATIME_CONTROL = 70;
         private const int DIMENSIUNE_PAS_Y = 30;
-        private const int DIMENSIUNE_PAS_X = 120;
+        private const int DIMENSIUNE_PAS_X = 150;
 
         private const int INALTIME_CONTROL = 148;
         private const int DIMENSIUNE_PAS_Ya = 30;
-        private const int DIMENSIUNE_PAS_Xa = 120;
+        private const int DIMENSIUNE_PAS_Xa = 150;
+
+        private const int MIN_NUMAR = 1;
+        private const int MAX_NUMAR = 99;
+        private const int MIN_INALTIME = 150;
+        private const int MAX_INALTIME = 220;
+        private const int MIN_GREUTATE = 50;
+        private const int MAX_GREUTATE = 120;
+        private const int MIN_DURATA = 5;
+        private const int MAX_DURATA = 120;
         public Form1()
         {
             InitializeComponent();
@@ -74,7 +84,7 @@ namespace Interfata_WindowsForms
             adminAntrenamente = new AdministrareAntrenament_FisierText(caleCompletaFisier2);
 
             //setare proprietati
-            this.Size = new Size(1000, 500);
+            this.Size = new Size(1500, 500);
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(100, 100);
             this.Font = new Font("Arial", 9, FontStyle.Bold);
@@ -174,7 +184,301 @@ namespace Interfata_WindowsForms
             lblZi.ForeColor = Color.Wheat;
             this.Controls.Add(lblZi);
 
+            // adaugare buton pentru refresh
+            btnRefresh = new Button();
+            btnRefresh.Text = "Refresh";
+            btnRefresh.Width = 100;
+            btnRefresh.Height = 30;
+            btnRefresh.Top = this.ClientSize.Height - 50;
+            btnRefresh.Left = 20;
+            btnRefresh.Click += BtnRefresh_Click;
+            this.Controls.Add(btnRefresh);
+
+            // --- TextBox-uri pentru jucători ---
+            txtNume = new TextBox();
+            txtNume.Left = DIMENSIUNE_PAS_X;
+            txtNume.Top = 300;
+            this.Controls.Add(txtNume);
+
+            txtPrenume = new TextBox();
+            txtPrenume.Left = 2 * DIMENSIUNE_PAS_X;
+            txtPrenume.Top = 300;
+            this.Controls.Add(txtPrenume);
+
+            txtPozitie = new TextBox();
+            txtPozitie.Left = 3 * DIMENSIUNE_PAS_X;
+            txtPozitie.Top = 300;
+            this.Controls.Add(txtPozitie);
+
+            txtNumar = new TextBox();
+            txtNumar.Left = 4 * DIMENSIUNE_PAS_X;
+            txtNumar.Top = 300;
+            this.Controls.Add(txtNumar);
+
+            dtpDataNasterii = new DateTimePicker();
+            dtpDataNasterii.Width = 100;
+            dtpDataNasterii.Left = 5 * DIMENSIUNE_PAS_X;
+            dtpDataNasterii.Top = 300;
+            dtpDataNasterii.Format = DateTimePickerFormat.Short;
+            this.Controls.Add(dtpDataNasterii);
+
+            txtInaltime = new TextBox();
+            txtInaltime.Left = 6 * DIMENSIUNE_PAS_X;
+            txtInaltime.Top = 300;
+            this.Controls.Add(txtInaltime);
+
+            txtGreutate = new TextBox();
+            txtGreutate.Left = 7 * DIMENSIUNE_PAS_X;
+            txtGreutate.Top = 300;
+            this.Controls.Add(txtGreutate);
+
+            // --- TextBox-uri pentru antrenamente ---
+            txtExercitiu = new TextBox();
+            txtExercitiu.Left = DIMENSIUNE_PAS_Xa;
+            txtExercitiu.Top = 420;
+            this.Controls.Add(txtExercitiu);
+
+            txtTip = new TextBox();
+            txtTip.Left = 2 * DIMENSIUNE_PAS_Xa;
+            txtTip.Top = 420;
+            this.Controls.Add(txtTip);
+
+            txtDurata = new TextBox();
+            txtDurata.Left = 3 * DIMENSIUNE_PAS_Xa;
+            txtDurata.Top = 420;
+            this.Controls.Add(txtDurata);
+
+            cmbZi = new ComboBox();
+            cmbZi.Width = LATIME_CONTROL;
+            cmbZi.Left = 4 * DIMENSIUNE_PAS_Xa;
+            cmbZi.Top = 420;
+            cmbZi.DataSource = Enum.GetValues(typeof(Zile));
+            this.Controls.Add(cmbZi);
+
+            // --- Buton pentru salvare ---
+            btnAdaugaJucator = new Button();
+            btnAdaugaJucator.Width = 150;
+            btnAdaugaJucator.Text = "Adauga Jucator";
+            btnAdaugaJucator.Left = 8 * DIMENSIUNE_PAS_X;
+            btnAdaugaJucator.Top = 300;
+            btnAdaugaJucator.Click += BtnAdaugaJucator_Click;
+            this.Controls.Add(btnAdaugaJucator);
+
+            btnAdaugaExercitiu = new Button();
+            btnAdaugaExercitiu.Width = 150;
+            btnAdaugaExercitiu.Text = "Adauga Exercitiu";
+            btnAdaugaExercitiu.Left = 5 * DIMENSIUNE_PAS_Xa;
+            btnAdaugaExercitiu.Top = 420;
+            btnAdaugaExercitiu.Click += BtnAdaugaExercitiu_Click;
+            this.Controls.Add(btnAdaugaExercitiu);
+
         }
+
+        private void BtnAdaugaJucator_Click(object sender, EventArgs e)
+        {
+            if (!ValidateJucator())
+                return;
+            string numeFisier = ConfigurationManager.AppSettings["NumeFisier"];
+            string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleCompletaFisier = locatieFisierSolutie + "\\" + numeFisier;
+            AdministrareJucatori_FisierText adminJucatori = new AdministrareJucatori_FisierText(caleCompletaFisier);
+            Jucator JucatorNou = new Jucator();
+            List<Jucator> jucatori = adminJucatori.GetJucatori(out int nrJucatori);
+            Jucator jucator = new Jucator(txtNume.Text, 
+                txtPrenume.Text, 
+                (Pozitie)Enum.Parse(typeof(Pozitie), 
+                txtPozitie.Text),
+                dtpDataNasterii.Value,
+                int.Parse(txtNumar.Text),  
+                int.Parse(txtInaltime.Text),
+                int.Parse(txtGreutate.Text));
+            adminJucatori.AdaugaJucator(jucator);
+        }
+
+        private void BtnAdaugaExercitiu_Click(object sender, EventArgs e)
+        {
+            if (!ValidateExercitiu())
+                return;
+            string numeFisier2 = ConfigurationManager.AppSettings["NumeFisier2"];
+            string locatieFisierSolutie2 = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+            string caleCompletaFisier2 = locatieFisierSolutie2 + "\\" + numeFisier2;
+            AdministrareAntrenament_FisierText adminAntrenament = new AdministrareAntrenament_FisierText(caleCompletaFisier2);
+            Antrenament AntrenamentNou = new Antrenament();
+            List<Antrenament> antrenamente = adminAntrenament.GetAntrenamente(out int nrAntrenamente);
+            Zile ziEnum = (Zile)cmbZi.SelectedItem;
+
+            Antrenament antrenament = new Antrenament(txtExercitiu.Text,
+                txtTip.Text,
+                int.Parse(txtDurata.Text),
+                ziEnum);
+            adminAntrenament.AddAntrenament(antrenament);
+        }
+
+        private void BtnRefresh_Click(object sender, EventArgs e)
+        {
+            AfiseazaJucator();
+            AfiseazaExercitii();
+        }
+
+        private bool ValidateJucator()
+        {
+            bool valid = true;
+            string errorMessage = "Erori la inregistrare:\n";
+
+            // Validare Nume
+            if (string.IsNullOrWhiteSpace(txtNume.Text))
+            {
+                lblNume.ForeColor = Color.Red;
+                errorMessage += "Nume invalid.\n";
+                valid = false;
+            }
+            else
+            {
+                lblNume.ForeColor = Color.Wheat;
+            }
+
+            // Validare Prenume
+            if (string.IsNullOrWhiteSpace(txtPrenume.Text))
+            {
+                lblPrenume.ForeColor = Color.Red;
+                errorMessage += "Prenume invalid.\n";
+                valid = false;
+            }
+            else
+            {
+                lblPrenume.ForeColor = Color.Wheat;
+            }
+
+            // Validare Pozitie - presupunem că valoarea introdusă trebuie să corespundă unui enum valid
+            try
+            {
+                var pozitie = (Pozitie)Enum.Parse(typeof(Pozitie), txtPozitie.Text, true);
+                lblPozitie.ForeColor = Color.Wheat;
+            }
+            catch
+            {
+                lblPozitie.ForeColor = Color.Red;
+                errorMessage += "Pozitie invalida.\n";
+                valid = false;
+            }
+
+            // Validare Numar
+            if (!int.TryParse(txtNumar.Text, out int numar) || numar < MIN_NUMAR || numar > MAX_NUMAR)
+            {
+                lblNumar.ForeColor = Color.Red;
+                errorMessage += $"Numarul trebuie sa fie intre {MIN_NUMAR} si {MAX_NUMAR}.\n";
+                valid = false;
+            }
+            else
+            {
+                lblNumar.ForeColor = Color.Wheat;
+            }
+
+            // Validare DataNasterii (exemplu: jucatorul trebuie să aibă minim 16 ani)
+            int varsta = DateTime.Now.Year - dtpDataNasterii.Value.Year;
+            if (varsta < 16)
+            {
+                // Puteți modifica această regulă după nevoie
+                lblVarsta.ForeColor = Color.Red;
+                errorMessage += "Jucatorul trebuie sa aiba minim 16 ani.\n";
+                valid = false;
+            }
+            else
+            {
+                lblVarsta.ForeColor = Color.Wheat;
+            }
+
+            // Validare Inaltime
+            if (!int.TryParse(txtInaltime.Text, out int inaltime) || inaltime < MIN_INALTIME || inaltime > MAX_INALTIME)
+            {
+                lblInaltime.ForeColor = Color.Red;
+                errorMessage += $"Inaltimea trebuie sa fie intre {MIN_INALTIME} si {MAX_INALTIME}.\n";
+                valid = false;
+            }
+            else
+            {
+                lblInaltime.ForeColor = Color.Wheat;
+            }
+
+            // Validare Greutate
+            if (!int.TryParse(txtGreutate.Text, out int greutate) || greutate < MIN_GREUTATE || greutate > MAX_GREUTATE)
+            {
+                lblGreutate.ForeColor = Color.Red;
+                errorMessage += $"Greutatea trebuie sa fie intre {MIN_GREUTATE} si {MAX_GREUTATE}.\n";
+                valid = false;
+            }
+            else
+            {
+                lblGreutate.ForeColor = Color.Wheat;
+            }
+
+            if (!valid)
+            {
+                MessageBox.Show(errorMessage, "Date invalide", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return valid;
+        }
+
+        private bool ValidateExercitiu()
+        {
+            bool valid = true;
+            string errorMessage = "Erori la inregistrarea exercitiului:\n";
+
+            // Validare Exercitiu
+            if (string.IsNullOrWhiteSpace(txtExercitiu.Text))
+            {
+                lblExercitiu.ForeColor = Color.Red;
+                errorMessage += "Exercitiu invalid.\n";
+                valid = false;
+            }
+            else
+            {
+                lblExercitiu.ForeColor = Color.Wheat;
+            }
+
+            // Validare Tip
+            if (string.IsNullOrWhiteSpace(txtTip.Text))
+            {
+                lblTip.ForeColor = Color.Red;
+                errorMessage += "Tipul exercitiului invalid.\n";
+                valid = false;
+            }
+            else
+            {
+                lblTip.ForeColor = Color.Wheat;
+            }
+
+            // Validare Durata
+            if (!int.TryParse(txtDurata.Text, out int durata) || durata < MIN_DURATA || durata > MAX_DURATA)
+            {
+                lblDurata.ForeColor = Color.Red;
+                errorMessage += $"Durata trebuie sa fie intre {MIN_DURATA} si {MAX_DURATA} minute.\n";
+                valid = false;
+            }
+            else
+            {
+                lblDurata.ForeColor = Color.Wheat;
+            }
+
+            // Validare Zi
+            if (cmbZi.SelectedItem == null)
+            {
+                lblZi.ForeColor = Color.Red;
+                errorMessage += "Zi invalida.\n";
+                valid = false;
+            }
+            else
+            {
+                lblZi.ForeColor = Color.Wheat;
+            }
+
+            if (!valid)
+            {
+                MessageBox.Show(errorMessage, "Date exercitiu invalide", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return valid;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             AfiseazaJucator();
@@ -182,124 +486,117 @@ namespace Interfata_WindowsForms
         }
         private void AfiseazaJucator()
         {
-            int nrJucatori;
-            Jucator[] jucatori = adminJucatori.GetJucatori(out nrJucatori);
+            List<Jucator> jucatori = adminJucatori.GetJucatori(out int nrJucatori);
 
-            lblsNume = new Label[nrJucatori];
-            lblsPrenume = new Label[nrJucatori];
-            lblsPozitie = new Label[nrJucatori];
-            lblsNumar = new Label[nrJucatori];
-            lblsVarsta = new Label[nrJucatori];
-            lblsInaltime = new Label[nrJucatori];
-            lblsGreutate = new Label[nrJucatori];
+            int nrColoane = 7; // Nume, Prenume, Pozitie, Numar, Varsta, Inaltime, Greutate
+            lblJucatori = new Label[nrJucatori, nrColoane];
 
-            int i = 0;
-            foreach (Jucator jucator in jucatori)
+            for (int i = 0; i < nrJucatori; i++)
             {
-                //adaugare control de tip Label pentru nume
-                lblsNume[i] = new Label();
-                lblsNume[i].Width = LATIME_CONTROL;
-                lblsNume[i].Text = jucator.Nume;
-                lblsNume[i].Left = DIMENSIUNE_PAS_X;
-                lblsNume[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsNume[i]);
+                int pozitieY = (i + 1) * DIMENSIUNE_PAS_Y;
 
-                //adaugare control de tip Label pentru prenume
-                lblsPrenume[i] = new Label();
-                lblsPrenume[i].Width = LATIME_CONTROL;
-                lblsPrenume[i].Text = jucator.Prenume;
-                lblsPrenume[i].Left = 2 * DIMENSIUNE_PAS_X;
-                lblsPrenume[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsPrenume[i]);
+                // Coloana 0: Nume
+                lblJucatori[i, 0] = new Label();
+                lblJucatori[i, 0].Width = LATIME_CONTROL;
+                lblJucatori[i, 0].Text = jucatori[i].Nume;
+                lblJucatori[i, 0].Left = 1 * DIMENSIUNE_PAS_X;
+                lblJucatori[i, 0].Top = pozitieY;
+                this.Controls.Add(lblJucatori[i, 0]);
 
-                //adaugare control de tip Label pentru pozitie
-                lblsPozitie[i] = new Label();
-                lblsPozitie[i].AutoSize = true;
-                lblsPozitie[i].Text = jucator.Pozitie.ToString();
-                lblsPozitie[i].Left = 3 * DIMENSIUNE_PAS_X;
-                lblsPozitie[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsPozitie[i]);
+                // Coloana 1: Prenume
+                lblJucatori[i, 1] = new Label();
+                lblJucatori[i, 1].Width = LATIME_CONTROL;
+                lblJucatori[i, 1].Text = jucatori[i].Prenume;
+                lblJucatori[i, 1].Left = 2 * DIMENSIUNE_PAS_X;
+                lblJucatori[i, 1].Top = pozitieY;
+                this.Controls.Add(lblJucatori[i, 1]);
 
-                //adaugare control de tip Label pentru numar
-                lblsNumar[i] = new Label();
-                lblsNumar[i].Width = LATIME_CONTROL;
-                lblsNumar[i].Text = jucator.Numar.ToString();
-                lblsNumar[i].Left = 4 * DIMENSIUNE_PAS_X;
-                lblsNumar[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsNumar[i]);
+                // Coloana 2: Pozitie
+                lblJucatori[i, 2] = new Label();
+                lblJucatori[i, 2].AutoSize = true;
+                lblJucatori[i, 2].Text = jucatori[i].Pozitie.ToString();
+                lblJucatori[i, 2].Left = 3 * DIMENSIUNE_PAS_X;
+                lblJucatori[i, 2].Top = pozitieY;
+                this.Controls.Add(lblJucatori[i, 2]);
 
-                //adaugare control de tip Label pentru varsta
-                lblsVarsta[i] = new Label();
-                lblsVarsta[i].Width = LATIME_CONTROL;
-                lblsVarsta[i].Text = jucator.Varsta.ToString();
-                lblsVarsta[i].Left = 5 * DIMENSIUNE_PAS_X;
-                lblsVarsta[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsVarsta[i]);
+                // Coloana 3: Numar
+                lblJucatori[i, 3] = new Label();
+                lblJucatori[i, 3].Width = LATIME_CONTROL;
+                lblJucatori[i, 3].Text = jucatori[i].Numar.ToString();
+                lblJucatori[i, 3].Left = 4 * DIMENSIUNE_PAS_X;
+                lblJucatori[i, 3].Top = pozitieY;
+                this.Controls.Add(lblJucatori[i, 3]);
 
-                //adaugare control de tip Label pentru inaltime
-                lblsInaltime[i] = new Label();
-                lblsInaltime[i].Width = LATIME_CONTROL;
-                lblsInaltime[i].Text = jucator.Inaltime.ToString();
-                lblsInaltime[i].Left = 6 * DIMENSIUNE_PAS_X;
-                lblsInaltime[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsInaltime[i]);
+                // Coloana 4: Varsta
+                lblJucatori[i, 4] = new Label();
+                lblJucatori[i, 4].Width = LATIME_CONTROL;
+                lblJucatori[i, 4].Text = jucatori[i].Varsta.ToString();
+                lblJucatori[i, 4].Left = 5 * DIMENSIUNE_PAS_X;
+                lblJucatori[i, 4].Top = pozitieY;
+                this.Controls.Add(lblJucatori[i, 4]);
 
-                //adaugare control de tip Label pentru greutate
-                lblsGreutate[i] = new Label();
-                lblsGreutate[i].Width = LATIME_CONTROL;
-                lblsGreutate[i].Text = jucator.Greutate.ToString();
-                lblsGreutate[i].Left = 7 * DIMENSIUNE_PAS_X;
-                lblsGreutate[i].Top = (i + 1) * DIMENSIUNE_PAS_Y;
-                this.Controls.Add(lblsGreutate[i]);
+                // Coloana 5: Inaltime
+                lblJucatori[i, 5] = new Label();
+                lblJucatori[i, 5].Width = LATIME_CONTROL;
+                lblJucatori[i, 5].Text = jucatori[i].Inaltime.ToString();
+                lblJucatori[i, 5].Left = 6 * DIMENSIUNE_PAS_X;
+                lblJucatori[i, 5].Top = pozitieY;
+                this.Controls.Add(lblJucatori[i, 5]);
 
-                i++;
+                // Coloana 6: Greutate
+                lblJucatori[i, 6] = new Label();
+                lblJucatori[i, 6].Width = LATIME_CONTROL;
+                lblJucatori[i, 6].Text = jucatori[i].Greutate.ToString();
+                lblJucatori[i, 6].Left = 7 * DIMENSIUNE_PAS_X;
+                lblJucatori[i, 6].Top = pozitieY;
+                this.Controls.Add(lblJucatori[i, 6]);
             }
         }
         private void AfiseazaExercitii()
         {
-            // Get the exercises
             int nrExercitii;
-            Antrenament[] antrenamente = adminAntrenamente.GetAntrenamente(out nrExercitii);
+            List<Antrenament> antrenamente = adminAntrenamente.GetAntrenamente(out nrExercitii);
 
-            int startTop = 150; // Start from this position below the title
-            
-            lblsExercitiu = new Label[nrExercitii];
-            lblsTip = new Label[nrExercitii];
-            lblsDurata = new Label[nrExercitii];
-            lblsZi = new Label[nrExercitii];
-            int i = 0;
+            int nrColoane = 4; // Exercitiu, Tip, Durata, Zi
+            lblExercitii = new Label[nrExercitii, nrColoane];
 
-            foreach(Antrenament antrenament in antrenamente)
+            int startTop = INALTIME_CONTROL;
+
+            for (int i = 0; i < nrExercitii; i++)
             {
-                lblsExercitiu[i] = new Label();
-                lblsExercitiu[i].Width = LATIME_CONTROL;
-                lblsExercitiu[i].Text = antrenament.Exercitiu;
-                lblsExercitiu[i].Left = DIMENSIUNE_PAS_Xa;
-                lblsExercitiu[i].Top = startTop + (i + 1) * DIMENSIUNE_PAS_Ya;
-                this.Controls.Add(lblsExercitiu[i]);
+                int pozitieY = startTop + (i + 1) * DIMENSIUNE_PAS_Ya;
 
-                lblsTip[i] = new Label();
-                lblsTip[i].Width = LATIME_CONTROL;
-                lblsTip[i].Text = antrenament.TipExercitiu;
-                lblsTip[i].Left = 2 * DIMENSIUNE_PAS_Xa;
-                lblsTip[i].Top = startTop + (i + 1) * DIMENSIUNE_PAS_Ya;
-                this.Controls.Add(lblsTip[i]);
+                // Coloana 0: Exercitiu
+                lblExercitii[i, 0] = new Label();
+                lblExercitii[i, 0].Width = LATIME_CONTROL;
+                lblExercitii[i, 0].Text = antrenamente[i].Exercitiu;
+                lblExercitii[i, 0].Left = 1 * DIMENSIUNE_PAS_Xa;
+                lblExercitii[i, 0].Top = pozitieY;
+                this.Controls.Add(lblExercitii[i, 0]);
 
-                lblsDurata[i] = new Label();
-                lblsDurata[i].Width = LATIME_CONTROL;
-                lblsDurata[i].Text = antrenament.Durata.ToString();
-                lblsDurata[i].Left = 3 * DIMENSIUNE_PAS_Xa;
-                lblsDurata[i].Top = startTop + (i + 1) * DIMENSIUNE_PAS_Ya;
-                this.Controls.Add(lblsDurata[i]);
+                // Coloana 1: Tip
+                lblExercitii[i, 1] = new Label();
+                lblExercitii[i, 1].Width = LATIME_CONTROL;
+                lblExercitii[i, 1].Text = antrenamente[i].TipExercitiu;
+                lblExercitii[i, 1].Left = 2 * DIMENSIUNE_PAS_Xa;
+                lblExercitii[i, 1].Top = pozitieY;
+                this.Controls.Add(lblExercitii[i, 1]);
 
-                lblsZi[i] = new Label();
-                lblsZi[i].Width = LATIME_CONTROL;
-                lblsZi[i].Text = antrenament.Zi.ToString();
-                lblsZi[i].Left = 4 * DIMENSIUNE_PAS_Xa;
-                lblsZi[i].Top = startTop + (i + 1) * DIMENSIUNE_PAS_Ya;
-                this.Controls.Add(lblsZi[i]);
+                // Coloana 2: Durata
+                lblExercitii[i, 2] = new Label();
+                lblExercitii[i, 2].Width = LATIME_CONTROL;
+                lblExercitii[i, 2].Text = antrenamente[i].Durata.ToString();
+                lblExercitii[i, 2].Left = 3 * DIMENSIUNE_PAS_Xa;
+                lblExercitii[i, 2].Top = pozitieY;
+                this.Controls.Add(lblExercitii[i, 2]);
 
-                i++;
+                // Coloana 3: Zi
+                lblExercitii[i, 3] = new Label();
+                lblExercitii[i, 3].Width = LATIME_CONTROL;
+                lblExercitii[i, 3].Text = antrenamente[i].Zi.ToString();
+                lblExercitii[i, 3].Left = 4 * DIMENSIUNE_PAS_Xa;
+                lblExercitii[i, 3].Top = pozitieY;
+                this.Controls.Add(lblExercitii[i, 3]);
             }
         }
     }

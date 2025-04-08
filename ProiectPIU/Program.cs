@@ -30,13 +30,13 @@ namespace ProiectPIU
             JucatorNou = CitireJucatorTastatura();
             AfisareJucator(JucatorNou);
             adminJucatori.AdaugaJucator(JucatorNou);
-            Jucator[] jucatori = adminJucatori.GetJucatori(out int nrJucatori);
-            AfisareJucatori(jucatori, nrJucatori);
+            List<Jucator> jucatori = adminJucatori.GetJucatori(out int nrJucatori);
+            AfisareJucatori(jucatori);
             AntrenamentNou = CitireTastaturaAntrenament();
             AfisareAntrenament(AntrenamentNou);
             adminAntrenament.AddAntrenament(AntrenamentNou);
-            Antrenament[] antrenamente = adminAntrenament.GetAntrenamente(out int nrAntrenamente);
-            AfisareAntrenamente(antrenamente, nrAntrenamente);
+            List<Antrenament> antrenamente = adminAntrenament.GetAntrenamente(out int nrAntrenamente);
+            AfisareAntrenamente(antrenamente);
 
             AdministrarePrezenta adminPrezenta = new AdministrarePrezenta();
 
@@ -123,10 +123,10 @@ namespace ProiectPIU
                 jucator.Greutate);
             Console.WriteLine(infoJucator);
         }
-        public static void AfisareJucatori(Jucator[] jucatori, int nrJucatori)
+        public static void AfisareJucatori(List<Jucator> jucatori)
         {
             Console.WriteLine("Jucatorii sunt:");
-            for (int contor = 0; contor < nrJucatori; contor++)
+            for (int contor = 0; contor < jucatori.Count; contor++)
             {
                 string infoJucator = jucatori[contor].Info();
                 Console.WriteLine($"Jucatorul {contor + 1}, {infoJucator}");
@@ -169,10 +169,10 @@ namespace ProiectPIU
                 antrenament.Zi);
             Console.WriteLine(infoAntrenament);
         }
-        public static void AfisareAntrenamente(Antrenament[] antrenamente, int nrAntrenamente)
+        public static void AfisareAntrenamente(List<Antrenament> antrenamente)
         {
             Console.WriteLine("Exercitiile sunt:");
-            for (int contor = 0; contor < nrAntrenamente; contor++)
+            for (int contor = 0; contor < antrenamente.Count; contor++)
             {
                 string infoAntrenament = antrenamente[contor].Info();
                 Console.WriteLine($"Exercitiul {contor + 1}, {infoAntrenament}");
