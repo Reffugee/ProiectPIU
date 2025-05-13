@@ -57,14 +57,71 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="FormAdaugaJucator.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="FormAdaugaJucator.Designer.cs">
+      <DependentUpon>FormAdaugaJucator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAdaugareEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAdaugareEx.Designer.cs">
+      <DependentUpon>FormAdaugareEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCautaJucator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCautaJucator.Designer.cs">
+      <DependentUpon>FormCautaJucator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormExercitiu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormExercitiu.Designer.cs">
+      <DependentUpon>FormExercitiu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormJucator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormJucator.Designer.cs">
+      <DependentUpon>FormJucator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPrezenta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPrezenta.Designer.cs">
+      <DependentUpon>FormPrezenta.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPrincipal.Designer.cs">
+      <DependentUpon>FormPrincipal.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormAdaugaJucator.resx">
+      <DependentUpon>FormAdaugaJucator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAdaugareEx.resx">
+      <DependentUpon>FormAdaugareEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCautaJucator.resx">
+      <DependentUpon>FormCautaJucator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormExercitiu.resx">
+      <DependentUpon>FormExercitiu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormJucator.resx">
+      <DependentUpon>FormJucator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPrezenta.resx">
+      <DependentUpon>FormPrezenta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPrincipal.resx">
+      <DependentUpon>FormPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -75,6 +132,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\LibrarieModele.Antrenament.datasource" />
+    <None Include="Properties\DataSources\LibrarieModele.Jucator.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -100,6 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MetroFramework.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

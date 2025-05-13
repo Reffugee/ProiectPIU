@@ -1,2 +1,3 @@
 Sprinturi;Cardio;20;Luni;
-Sprinturi;Cardio;20;Luni;
+Dribbling;Tehnic;30;Miercuri;
+asd;sad;33;Luni;

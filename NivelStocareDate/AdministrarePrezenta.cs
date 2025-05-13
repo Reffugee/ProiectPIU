@@ -1,5 +1,7 @@
-﻿using System;
+﻿using LibrarieModele;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,38 +10,44 @@ namespace NivelStocareDate
 {
     public class AdministrarePrezenta
     {
-        private List<string> _ListaPrezenta;
+        private readonly string caleFisier;
+        private const char SEPARATOR = ';';
 
-        public AdministrarePrezenta()
+        public AdministrarePrezenta(string caleFisier)
         {
-            _ListaPrezenta = new List<string>();
+            this.caleFisier = caleFisier;
+            if (!File.Exists(caleFisier))
+                File.Create(caleFisier).Dispose();
         }
 
-        public void Prezenta(string NumeJucator, int NumarJucator, string Exercitiu, bool prezenta)
+        public void SalveazaPrezenta(Prezenta p)
         {
-            var Prezenta  = $"{NumeJucator} (Jucatorul #{NumarJucator}) prezenta la {Exercitiu}: {prezenta}";
-            _ListaPrezenta.Add(Prezenta);
+            string line = string.Join(SEPARATOR.ToString(),
+                p.Nume,
+                p.Prenume,
+                p.Exercitiu,
+                p.Data.ToString("yyyy-MM-dd"),
+                (p.Participa ? "1" : "0"));
+            File.AppendAllLines(caleFisier, new[] { line });
         }
 
-        public void AfisarePrezenta()
+        public List<Prezenta> GetPrezente()
         {
-            Console.WriteLine("Lista Prezenta:");
-            foreach (var lista in _ListaPrezenta)
-            {
-                Console.WriteLine(lista);
-            }
-        }
-
-        public bool PrezentaExercitiu(int NumarJucator, string Exercitiu)
-        {
-            foreach (var lista in _ListaPrezenta)
-            {
-                if (lista.Contains($"Jucator #{NumarJucator}") && lista.Contains(Exercitiu))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return File.ReadAllLines(caleFisier)
+                       .Where(l => !string.IsNullOrWhiteSpace(l))
+                       .Select(l =>
+                       {
+                           var parts = l.Split(SEPARATOR);
+                           return new Prezenta
+                           {
+                               Nume = parts[0],
+                               Prenume = parts[1],
+                               Exercitiu = parts[2],
+                               Data = DateTime.Parse(parts[3]),
+                               Participa = parts[4] == "1"
+                           };
+                       })
+                       .ToList();
         }
     }
 }

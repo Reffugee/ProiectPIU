@@ -1,2 +1,4 @@
 ion;ionescu;Mijlocas, Atacant;2000-03-17;11;190;80
 ionel;ion;Portar;2004-06-16;15;180;70
+asdff;asdaa;Fundas, Mijlocas;2000-03-02;11;180;66
+asd;asd;Fundas, Mijlocas;2025-05-02;11;160;76

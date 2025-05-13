@@ -45,6 +45,7 @@
     <Compile Include="Enum\Pozitie.cs" />
     <Compile Include="Enum\Zile.cs" />
     <Compile Include="Jucator.cs" />
+    <Compile Include="Prezenta.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
