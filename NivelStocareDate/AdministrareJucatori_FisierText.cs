@@ -46,19 +46,44 @@ namespace NivelStocareDate
             return jucatori;
         }
 
-        public List<Jucator> GetJucator(string Nume, string Prenume)
+        public List<Jucator> GetJucator(string term, out int count)
         {
-            List<Jucator> listaJucatori = new List<Jucator>();
-            foreach (var linie in File.ReadLines(numeFisier))
-            {
-                Jucator jucator = new Jucator(linie);
-                if (jucator.Nume.Equals(Nume, StringComparison.OrdinalIgnoreCase) &&
-                    jucator.Prenume.Equals(Prenume, StringComparison.OrdinalIgnoreCase))
-                {
-                    listaJucatori.Add(jucator);
-                }
-            }
-            return listaJucatori;
+            term = term?.Trim() ?? "";
+            var all = GetJucatori(out _);
+
+            string[] parts = term.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var found = all.Where(j =>
+                (parts.Length == 1 &&
+                 (j.Nume.Equals(parts[0], StringComparison.OrdinalIgnoreCase) ||
+                  j.Prenume.Equals(parts[0], StringComparison.OrdinalIgnoreCase))) ||
+
+                (parts.Length >= 2 &&
+                 j.Nume.Equals(parts[0], StringComparison.OrdinalIgnoreCase) &&
+                 j.Prenume.Equals(parts[1], StringComparison.OrdinalIgnoreCase))
+            ).ToList();
+
+            count = found.Count;
+            return found;
         }
+
+        public void SalveazaEdit(IEnumerable<Jucator> jucatori)
+        {
+            var lines = jucatori
+                .Select(j => j.ConversieSir_PentruFisier());
+            File.WriteAllLines(numeFisier, lines, Encoding.UTF8);
+        }
+        public bool StergeUltimulJucator()
+        {
+            var lines = File.ReadAllLines(numeFisier).ToList();
+            if (lines.Count == 0)
+                return false;
+
+            lines.RemoveAt(lines.Count - 1);
+
+            File.WriteAllLines(numeFisier, lines);
+            return true;
+        }
+
     }
 }

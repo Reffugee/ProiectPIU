@@ -30,6 +30,7 @@ namespace Interfata_WindowsForms
             // astfel incat datele din fisier sa poata fi utilizate si de alte proiecte
             string caleCompletaFisier2 = locatieFisierSolutie2 + "\\" + numeFisier2;
             AdministrareAntrenament_FisierText adminAntrenament = new AdministrareAntrenament_FisierText(caleCompletaFisier2);
+            mcbZi.DataSource = Enum.GetValues(typeof(Zile));
         }
 
         private void mlAdaugare_Click(object sender, EventArgs e)
@@ -37,8 +38,8 @@ namespace Interfata_WindowsForms
             if (!ValidateInputs())
             {
                 MessageBox.Show(
-                    "Please correct the highlighted fields before continuing.",
-                    "Validation Error",
+                    "Vă rugăm să corectați câmpurile evidențiate în roșu.",
+                    "Date invalide",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
                 return;
@@ -61,29 +62,29 @@ namespace Interfata_WindowsForms
         {
             bool allValid = true;
 
-            Action<MetroTextBox, MetroLabel, bool> styleTextbox = (tb, lbl, isValid) =>
-            {
-                tb.CustomForeColor = true;
-                tb.ForeColor = isValid ? Color.Black : Color.Red;
-
-                lbl.CustomForeColor = true;
-                lbl.ForeColor = isValid ? Color.Black : Color.Red;
-
-                if (!isValid) allValid = false;
-            };
             bool numeValid = !string.IsNullOrWhiteSpace(mtbExercitiu.Text);
-            styleTextbox(mtbExercitiu, mlExercitiu, numeValid);
+            allValid &= StyleTextbox(mtbExercitiu, mlExercitiu, numeValid);
 
             bool tipValid = !string.IsNullOrWhiteSpace(mtbTip.Text);
-            styleTextbox(mtbTip, mlTip, tipValid);
+            allValid &= StyleTextbox(mtbTip, mlTip, tipValid);
 
             bool durataValid = int.TryParse(mtbDurata.Text, out int dur)
                                && dur >= MIN_DURATA
                                && dur <= MAX_DURATA;
-            styleTextbox(mtbDurata, mlDurata, durataValid);
-
+            allValid &= StyleTextbox(mtbDurata, mlDurata, durataValid);
 
             return allValid;
+        }
+
+        private bool StyleTextbox(MetroTextBox tb, MetroLabel lbl, bool isValid)
+        {
+            tb.CustomForeColor = true;
+            tb.ForeColor = isValid ? Color.Black : Color.Red;
+
+            lbl.CustomForeColor = true;
+            lbl.ForeColor = isValid ? Color.Black : Color.Red;
+
+            return isValid;
         }
     }
 }

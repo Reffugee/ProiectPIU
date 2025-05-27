@@ -31,11 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPrincipal));
             this.mtExercitiu = new MetroFramework.Controls.MetroTile();
             this.mtJucatori = new MetroFramework.Controls.MetroTile();
-            this.metroTile1 = new MetroFramework.Controls.MetroTile();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.metroTile1 = new MetroFramework.Controls.MetroTile();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // mtExercitiu
@@ -55,28 +55,30 @@
             this.mtJucatori.Style = MetroFramework.MetroColorStyle.Silver;
             this.mtJucatori.Click += new System.EventHandler(this.mtJucatori_Click);
             // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::Interfata_WindowsForms.Properties.Resources.istockphoto_1342490008_612x612;
+            resources.ApplyResources(this.pictureBox2, "pictureBox2");
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Interfata_WindowsForms.Properties.Resources._360_F_1268152671_HT1ASesrThk5keqJaEr3wmv1xBnVBqe4;
+            resources.ApplyResources(this.pictureBox1, "pictureBox1");
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.TabStop = false;
+            // 
             // metroTile1
             // 
             this.metroTile1.CustomBackground = true;
             this.metroTile1.CustomForeColor = true;
             resources.ApplyResources(this.metroTile1, "metroTile1");
             this.metroTile1.Name = "metroTile1";
-            this.metroTile1.TileImage = ((System.Drawing.Image)(resources.GetObject("metroTile1.TileImage")));
+            this.metroTile1.TileImage = global::Interfata_WindowsForms.Properties.Resources.download__9_;
             this.metroTile1.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.metroTile1.TileTextFontSize = MetroFramework.MetroTileTextSize.Small;
             this.metroTile1.UseTileImage = true;
-            // 
-            // pictureBox1
-            // 
-            resources.ApplyResources(this.pictureBox1, "pictureBox1");
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            resources.ApplyResources(this.pictureBox2, "pictureBox2");
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.TabStop = false;
             // 
             // FormPrincipal
             // 
@@ -90,8 +92,8 @@
             this.ForeColor = System.Drawing.SystemColors.ActiveBorder;
             this.Name = "FormPrincipal";
             this.Style = MetroFramework.MetroColorStyle.Black;
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }

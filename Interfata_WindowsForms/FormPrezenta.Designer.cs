@@ -94,7 +94,9 @@
             this.Controls.Add(this.dgvJucatori);
             this.Controls.Add(this.cmbExercitii);
             this.Controls.Add(this.metroLabel1);
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.Name = "FormPrezenta";
+            this.Style = MetroFramework.MetroColorStyle.Black;
             this.Text = "Prezenta Jucator";
             ((System.ComponentModel.ISupportInitialize)(this.dgvJucatori)).EndInit();
             this.ResumeLayout(false);

@@ -92,5 +92,34 @@ namespace Interfata_WindowsForms
         {
             this.Close();
         }
+
+        private void mtSterge_Click(object sender, EventArgs e)
+        {
+
+            var rezultat = MessageBox.Show(
+                "Sigur vrei să ștergi ultimul exercițiu?",
+                "Confirmare ștergere",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (rezultat != DialogResult.Yes)
+                return;
+
+
+            bool sters = adminAntrenamente.StergeUltimul();
+            if (!sters)
+            {
+                MessageBox.Show(
+                    "Nu există niciun exercițiu de șters.",
+                    "Ștergere eșuată",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+
+            AfiseazaExercitii();
+        }
+
     }
 }

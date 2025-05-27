@@ -22,10 +22,10 @@ namespace Interfata_WindowsForms
         private List<string> PozitieSelectate = new List<string>();
         private const int MIN_NUMAR = 1;
         private const int MAX_NUMAR = 99;
-        private const int MIN_INALTIME = 150;
-        private const int MAX_INALTIME = 220;
-        private const int MIN_GREUTATE = 50;
-        private const int MAX_GREUTATE = 120;
+        private const int MIN_INALTIME = 130;
+        private const int MAX_INALTIME = 230;
+        private const int MIN_GREUTATE = 30;
+        private const int MAX_GREUTATE = 150;
         public FormAdaugaJucator()
         {
             InitializeComponent();
@@ -70,56 +70,60 @@ namespace Interfata_WindowsForms
         {
             bool allValid = true;
 
-            Action<MetroTextBox, MetroLabel, bool> styleTextbox = (tb, lbl, isValid) =>
-            {
-                tb.CustomForeColor = true;
-                tb.ForeColor = isValid ? Color.Black : Color.Red;
-
-                lbl.CustomForeColor = true;
-                lbl.ForeColor = isValid ? Color.Black : Color.Red;
-
-                if (!isValid) allValid = false;
-            };
-
-            Action<MetroCheckBox, bool> styleCheckBox = (cb, isValid) =>
-            {
-                cb.CustomForeColor = true;
-                cb.ForeColor = isValid ? Color.Black : Color.Red;
-
-                if (!isValid) allValid = false;
-            };
-
-            styleTextbox(mtbNume, mlNume, !string.IsNullOrWhiteSpace(mtbNume.Text));
-            styleTextbox(mtbPrenume, mlPrenume, !string.IsNullOrWhiteSpace(mtbPrenume.Text));
+            allValid &= StyleTextbox(mtbNume, mlNume, !string.IsNullOrWhiteSpace(mtbNume.Text));
+            allValid &= StyleTextbox(mtbPrenume, mlPrenume, !string.IsNullOrWhiteSpace(mtbPrenume.Text));
 
             bool numarValid = int.TryParse(mtbNumar.Text, out int numar)
                               && numar >= MIN_NUMAR && numar <= MAX_NUMAR;
-            styleTextbox(mtbNumar, mlNumar, numarValid);
+            allValid &= StyleTextbox(mtbNumar, mlNumar, numarValid);
 
             bool inaltimeValid = int.TryParse(mtbInaltime.Text, out int inaltime)
                                  && inaltime >= MIN_INALTIME && inaltime <= MAX_INALTIME;
-            styleTextbox(mtbInaltime, mlInaltime, inaltimeValid);
+            allValid &= StyleTextbox(mtbInaltime, mlInaltime, inaltimeValid);
 
             bool greutateValid = int.TryParse(mtbGreutate.Text, out int greutate)
                                  && greutate >= MIN_GREUTATE && greutate <= MAX_GREUTATE;
-            styleTextbox(mtbGreutate, mlGreutate, greutateValid);
+            allValid &= StyleTextbox(mtbGreutate, mlGreutate, greutateValid);
+
 
             bool validPozitii = PozitieSelectate.Any();
 
-            foreach (var cb in Controls.OfType<MetroCheckBox>()
-                                      .Where(c => c.Name.StartsWith("mcb")))
-            {
-                styleCheckBox(cb, validPozitii);
-            }
+            foreach (var cb in Controls.OfType<MetroCheckBox>().Where(c => c.Name.StartsWith("mcb")))
+                allValid &= StyleCheckBox(cb, validPozitii);
 
-            mlPozitie.CustomForeColor = true;
-            mlPozitie.ForeColor = validPozitii ? Color.Black : Color.Red;
-            if (!validPozitii) allValid = false;
+
+            allValid &= StyleLabel(mlPozitie, validPozitii);
 
             return allValid;
         }
 
 
+        private bool StyleTextbox(MetroTextBox tb, MetroLabel lbl, bool isValid)
+        {
+            tb.CustomForeColor = true;
+            tb.ForeColor = isValid ? Color.Black : Color.Red;
+
+            lbl.CustomForeColor = true;
+            lbl.ForeColor = isValid ? Color.Black : Color.Red;
+
+            return isValid;
+        }
+
+        private bool StyleCheckBox(MetroCheckBox cb, bool isValid)
+        {
+            cb.CustomForeColor = true;
+            cb.ForeColor = isValid ? Color.Black : Color.Red;
+
+            return isValid;
+        }
+
+        private bool StyleLabel(MetroLabel lbl, bool isValid)
+        {
+            lbl.CustomForeColor = true;
+            lbl.ForeColor = isValid ? Color.Black : Color.Red;
+
+            return isValid;
+        }
 
 
         private void mcbPozitie_CheckedChanged(object sender, EventArgs e)

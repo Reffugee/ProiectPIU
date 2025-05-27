@@ -48,6 +48,7 @@ namespace Interfata_WindowsForms
             string numeFisierPrez = ConfigurationManager.AppSettings["NumeFisier3"];
             string calePrez = Path.Combine(proiectDir, numeFisierPrez);
             adminPrez = new AdministrarePrezenta(calePrez);
+            AfiseazaJucatori();
 
         }
 
@@ -117,8 +118,44 @@ namespace Interfata_WindowsForms
 
         private void mtPrezenta_Click(object sender, EventArgs e)
         {
-            using (var formAdd = new FormPrezenta(adminJucatori, adminEx, adminPrez))
-                formAdd.ShowDialog();
+            var formPrezenta = new FormPrezenta(adminJucatori,adminEx, adminPrez);
+            formPrezenta.ShowDialog();
         }
+
+        private void mtEdit_Click(object sender, EventArgs e)
+        {
+            var formEdit = new FormEditare();
+            formEdit.ShowDialog();
+        }
+
+        private void mtSterge_Click(object sender, EventArgs e)
+        {
+
+            var rezultat = MessageBox.Show(
+                "Sigur vrei să ștergi ultimul jucator?",
+                "Confirmare ștergere",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (rezultat != DialogResult.Yes)
+                return;
+
+
+            bool sters = adminJucatori.StergeUltimulJucator();
+            if (!sters)
+            {
+                MessageBox.Show(
+                    "Nu există niciun jucator de șters.",
+                    "Ștergere eșuată",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+
+            AfiseazaJucatori();
+        }
+
+
     }
 }

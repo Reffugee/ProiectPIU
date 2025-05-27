@@ -11,13 +11,12 @@ namespace Interfata_WindowsForms
 {
     public partial class FormPrezenta : MetroForm
     {
-        private readonly AdministrareJucatori_FisierText adminJuc;
-        private readonly AdministrareAntrenament_FisierText adminEx;
-        private readonly AdministrarePrezenta adminPrez;
+        private AdministrareJucatori_FisierText adminJuc;
+        private AdministrareAntrenament_FisierText adminEx;
+        private AdministrarePrezenta adminPrez;
 
         private Dictionary<string, bool[]> prezMap = new Dictionary<string, bool[]>();
 
-        // Hold on to the last-selected exercise so we know where to save
         private string lastExercitiu = null;
 
         public FormPrezenta(
@@ -30,16 +29,16 @@ namespace Interfata_WindowsForms
             this.adminEx = adminEx;
             this.adminPrez = adminPrez;
             IncarcaExercitii();
-            PopuleazaJucatori();      // only this one time
+            PopuleazaJucatori();      
             lastExercitiu = cmbExercitii.SelectedValue as string;
         }
 
         private void IncarcaExercitii()
         {
-            // pull your Antrenament objects
+            
             var listaAntr = adminEx.GetAntrenamente(out int nrAntr);
 
-            // bind only the "name" (string) — change "Denumire" to your actual property
+            
             cmbExercitii.DataSource = listaAntr;
             cmbExercitii.DisplayMember = nameof(Antrenament.Exercitiu);
             cmbExercitii.ValueMember = nameof(Antrenament.Exercitiu);
@@ -49,7 +48,7 @@ namespace Interfata_WindowsForms
 
         private void cmbExercitii_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // 1) Save old state
+            
             if (lastExercitiu != null)
             {
                 bool[] state = dgvJucatori.Rows
@@ -59,7 +58,7 @@ namespace Interfata_WindowsForms
                 prezMap[lastExercitiu] = state;
             }
 
-            // 2) Apply new state (if any), or clear
+            
             string curEx = cmbExercitii.SelectedValue as string;
             if (curEx != null && prezMap.TryGetValue(curEx, out var saved))
             {
@@ -68,12 +67,12 @@ namespace Interfata_WindowsForms
             }
             else
             {
-                // No saved state: clear all to false
+                
                 foreach (DataGridViewRow row in dgvJucatori.Rows)
                     row.Cells["Prezent"].Value = false;
             }
 
-            // 3) Remember for next time
+           
             lastExercitiu = curEx;
 
         }
@@ -81,7 +80,7 @@ namespace Interfata_WindowsForms
         {
             var jucatori = adminJuc.GetJucatori(out _);
 
-            // If you’re still using the DataTable approach:
+            
             dgvJucatori.DataSource = BuildPlayersTable(jucatori, null);
         }
 
@@ -107,9 +106,9 @@ namespace Interfata_WindowsForms
         private void mtSalvare_Click(object sender, EventArgs e)
         {
             {
-                // grab the selected exercise name
+                
                 string exer = cmbExercitii.SelectedValue as string;
-                // or:  string exer = ((Antrenament)cmbExercitii.SelectedItem).Denumire;
+                
 
                 DateTime data = DateTime.Today;
 

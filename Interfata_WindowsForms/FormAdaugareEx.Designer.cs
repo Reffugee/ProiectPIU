@@ -85,24 +85,6 @@ namespace Interfata_WindowsForms
             // 
             // mcbZi
             // 
-            this.mcbZi.DataSource = new LibrarieModele.Enumerari.Zile[] {
-        LibrarieModele.Enumerari.Zile.Luni,
-        LibrarieModele.Enumerari.Zile.Marti,
-        LibrarieModele.Enumerari.Zile.Miercuri,
-        LibrarieModele.Enumerari.Zile.Joi,
-        LibrarieModele.Enumerari.Zile.Vineri,
-        LibrarieModele.Enumerari.Zile.Sambata,
-        LibrarieModele.Enumerari.Zile.Duminica};
-            this.mcbZi.FormattingEnabled = true;
-            this.mcbZi.ItemHeight = 23;
-            this.mcbZi.Items.AddRange(new object[] {
-            LibrarieModele.Enumerari.Zile.Luni,
-            LibrarieModele.Enumerari.Zile.Marti,
-            LibrarieModele.Enumerari.Zile.Miercuri,
-            LibrarieModele.Enumerari.Zile.Joi,
-            LibrarieModele.Enumerari.Zile.Vineri,
-            LibrarieModele.Enumerari.Zile.Sambata,
-            LibrarieModele.Enumerari.Zile.Duminica});
             this.mcbZi.Location = new System.Drawing.Point(184, 249);
             this.mcbZi.Name = "mcbZi";
             this.mcbZi.Size = new System.Drawing.Size(121, 29);
@@ -165,6 +147,7 @@ namespace Interfata_WindowsForms
             this.Controls.Add(this.mlTip);
             this.Controls.Add(this.mlExercitiu);
             this.Name = "FormAdaugareEx";
+            this.Style = MetroFramework.MetroColorStyle.Black;
             this.Text = "Adaugare Exercitii";
             ((System.ComponentModel.ISupportInitialize)(this.jucatorBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.jucatorBindingSource1)).EndInit();

@@ -19,58 +19,72 @@ namespace Interfata_WindowsForms
 {
     public partial class FormCautaJucator: MetroForm
     {
+        private AdministrareJucatori_FisierText adminJucatori;
         public FormCautaJucator()
         {
             InitializeComponent();
-        }
-
-        private void mtCauta_Click(object sender, EventArgs e)
-        {
             string numeFisier = ConfigurationManager.AppSettings["NumeFisier"];
             string locatieFisierSolutie = Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.Parent.FullName;
             // setare locatie fisier in directorul corespunzator solutiei
             // astfel incat datele din fisier sa poata fi utilizate si de alte proiecte
             string caleCompletaFisier = locatieFisierSolutie + "\\" + numeFisier;
-            AdministrareJucatori_FisierText adminJucatori = new AdministrareJucatori_FisierText(caleCompletaFisier);
-            string nume = mtbNume.Text;
-            string prenume = mtbPrenume.Text;
-            List<Jucator> jucatori = adminJucatori.GetJucatori(out int nrJucatori);
-            var jucatorGasit = jucatori.FirstOrDefault(j => j.Nume.Equals(nume, StringComparison.OrdinalIgnoreCase) && j.Prenume.Equals(prenume, StringComparison.OrdinalIgnoreCase));
+            adminJucatori = new AdministrareJucatori_FisierText(caleCompletaFisier);
+        }
 
-            // Clear previous search results  
+        private void mtCauta_Click(object sender, EventArgs e)
+        {
+            string termen = mtbNume.Text.Trim();
+
+            var jucatoriGasiti = adminJucatori.GetJucator(termen, out int nrGasiti);
+
+
             StergereJucatorCautat();
 
-            // starting vertical position:
+            if (nrGasiti == 0)
+            {
+                MessageBox.Show($"Nu am găsit niciun jucător pentru '{termen}'.",
+                                "Căutare terminată",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                return;
+            }
+
+
             int topOffset = 100;
             int leftOffset = 360;
 
-            // prepare your data:
-            var info = new Dictionary<string, string>()
+            foreach (var j in jucatoriGasiti)
             {
-                ["Nume"] = jucatorGasit.Nume,
-                ["Prenume"] = jucatorGasit.Prenume,
-                ["Pozitie"] = jucatorGasit.Pozitie.ToString(),
-                ["Data Nașterii"] = jucatorGasit.DataNastere.ToShortDateString(),
-                ["Numar"] = jucatorGasit.Numar.ToString(),
-                ["Înălțime"] = $"{jucatorGasit.Inaltime} cm",
-                ["Greutate"] = $"{jucatorGasit.Greutate} kg",
-                ["Vârstă"] = $"{jucatorGasit.Varsta} ani",
-            };
-
-            foreach (var kvp in info)
-            {
-                var lbl = new MetroLabel()
+                var info = new Dictionary<string, string>()
                 {
-                    AutoSize = true,
-                    Top = topOffset,
-                    Left = leftOffset,
-                    ForeColor = Color.Wheat,
-                    Text = $"{kvp.Key}: {kvp.Value}"
+                    ["Nume"] = j.Nume,
+                    ["Prenume"] = j.Prenume,
+                    ["Pozitie"] = j.Pozitie.ToString(),
+                    ["Data Nașterii"] = j.DataNastere.ToShortDateString(),
+                    ["Numar"] = j.Numar.ToString(),
+                    ["Înălțime"] = $"{j.Inaltime} cm",
+                    ["Greutate"] = $"{j.Greutate} kg",
+                    ["Vârstă"] = $"{j.Varsta} ani",
                 };
-                this.Controls.Add(lbl);
-                topOffset += lbl.Height + 5;  // 5px spacing between labels
-            }
 
+
+                foreach (var kvp in info)
+                {
+                    var lbl = new MetroFramework.Controls.MetroLabel()
+                    {
+                        AutoSize = true,
+                        Top = topOffset,
+                        Left = leftOffset,
+                        ForeColor = Color.Wheat,
+                        Text = $"{kvp.Key}: {kvp.Value}"
+                    };
+                    this.Controls.Add(lbl);
+                    topOffset += lbl.Height + 2;
+                }
+
+
+                topOffset += 10;
+            }
         }
         private void StergereJucatorCautat()
         {

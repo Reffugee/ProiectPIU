@@ -1,3 +1,4 @@
-Sprinturi;Cardio;20;Luni;
-Dribbling;Tehnic;30;Miercuri;
-asd;sad;33;Luni;
+Sprinturi;Cardio;30;Luni;
+Faze Lungi;Tehnica;20;Luni;
+Flotari;Forta;15;Miercuri;
+Cornere;Tehnica;35;Marti;

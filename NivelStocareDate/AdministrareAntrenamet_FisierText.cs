@@ -43,6 +43,21 @@ namespace NivelStocareDate
             nrAntrenamente = antrenamente.Count;
             return antrenamente;
         }
+        public bool StergeUltimul()
+        {
+
+            var lines = File.ReadAllLines(numeFisier2).ToList();
+            if (lines.Count == 0)
+                return false;
+
+
+            lines.RemoveAt(lines.Count - 1);
+
+
+            File.WriteAllLines(numeFisier2, lines);
+            return true;
+        }
+
 
     }
 }

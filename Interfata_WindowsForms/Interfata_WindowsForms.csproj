@@ -75,6 +75,12 @@
     <Compile Include="FormCautaJucator.Designer.cs">
       <DependentUpon>FormCautaJucator.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormEditare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditare.Designer.cs">
+      <DependentUpon>FormEditare.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormExercitiu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +116,9 @@
     <EmbeddedResource Include="FormCautaJucator.resx">
       <DependentUpon>FormCautaJucator.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormEditare.resx">
+      <DependentUpon>FormEditare.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormExercitiu.resx">
       <DependentUpon>FormExercitiu.cs</DependentUpon>
     </EmbeddedResource>
@@ -130,10 +139,12 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\LibrarieModele.Antrenament.datasource" />
     <None Include="Properties\DataSources\LibrarieModele.Jucator.datasource" />
+    <None Include="Properties\DataSources\NivelStocareDate.AdministrareJucatori_FisierText.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -159,6 +170,27 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MetroFramework.txt" />
+    <None Include="Resources\download %2812%29.png" />
+    <None Include="Resources\download %2811%29.png" />
+    <None Include="Resources\download %2810%29.png" />
+    <None Include="Resources\download %289%29.png" />
+    <None Include="Resources\download %281%29.png" />
+    <None Include="Resources\images.png" />
+    <None Include="Resources\images %281%29.png" />
+    <None Include="Resources\istockphoto-1342490008-612x612.jpg" />
+    <None Include="Resources\download %282%29.png" />
+    <None Include="Resources\download %283%29.png" />
+    <None Include="Resources\download %284%29.png" />
+    <None Include="Resources\download %285%29.png" />
+    <None Include="Resources\download %286%29.png" />
+    <None Include="Resources\download %287%29.png" />
+    <None Include="Resources\download %288%29.png" />
+    <None Include="Resources\images %282%29.png" />
+    <None Include="Resources\images.jpeg" />
+    <None Include="Resources\images %283%29.png" />
+    <None Include="Resources\360_F_1268152671_HT1ASesrThk5keqJaEr3wmv1xBnVBqe4.jpg" />
+    <None Include="Resources\images %284%29.png" />
+    <None Include="Resources\download.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

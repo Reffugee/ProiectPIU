@@ -249,6 +249,7 @@
             this.Controls.Add(this.mlPrenume);
             this.Controls.Add(this.mlNume);
             this.Name = "FormAdaugaJucator";
+            this.Style = MetroFramework.MetroColorStyle.Black;
             this.Text = "Adauga Jucator";
             this.metroPanel1.ResumeLayout(false);
             this.metroPanel1.PerformLayout();
